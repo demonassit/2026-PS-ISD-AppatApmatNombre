@@ -1,0 +1,22 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/demonassit/2026-PS-ISD-AppatApmatNombre.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/demonassit/2026-PS-ISD-AppatApmatNombre/issues"
+  },
+  "homepage": "https://github.com/demonassit/2026-PS-ISD-AppatApmatNombre#readme",
+  "description": "",
+  "dependencies": {
+    "net": "^1.0.2"
+  }
+}
