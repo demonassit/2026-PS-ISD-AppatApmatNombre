@@ -80,4 +80,51 @@
             </div>
         `;
     }
+
+    //pestañas
+
+    document.querySelectorAll('.pestana').forEach((boton) => {
+        boton.addEventListener('click', () => activarPanel(boton.dataset.panel));
+    });
+
+    function activarPanel(id){
+        document.querySelectorAll('.pestana').forEach((b) => b.classList.toggle('activa', b.dataset.panel === id));
+        document.querySelectorAll('.panel').forEach((p) => p.classList.toggle('activo'), p.id === id);
+    }
+
+    //conversores
+    $('form-binario').addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const destino = $('bin-resultado');
+        try{
+            const entrada = $('bin-entrada').value.trim();
+            const octetos = entrada.includes('.') ? S.enteroAIp(S.ipAEntero(entrada)).split('.').map(Number) : [Number(entrada)];
+            if(octetos.some((0) => !Number.isInteger(o)  || o < 0 || o > 255)){
+                throw new Error('Escribe un numero entre el 0 y el 255 o una IP valida'); 
+            }
+            destino.innerHTML = octetos.map((o) =>{
+                const pasos = S.pasosDecimalABinario(o);
+                return `
+                    <div  class="tarjeta" >
+                        <h3>${o} -> <span class="binario">${S.octetoABinario(o)}</span></h3>
+                        <table class="pasos" >
+                            <tr>
+                                <th>Peso</th>
+                                <th>${pasos.map((p) => `<th>${p.peso}</th>`).join('')}</th>
+                                <th>Bit</th>
+                                <th>${pasos.map((p) => `<th>${p.bit}</th>`).join('')}</th>
+                                <th>Resto</th>
+                                <th>${pasos.map((p) => `<th>${p.resto}</th>`).join('')}</th>
+                            </tr>
+                        </table>
+                        <p class="leyenda">Si el numero (o lo que resta) alcanza para el peso, se pone 1 y se resta, sino, se pone 0</p>
+                    </div>
+                `;
+            }).join('');
+        }catch (err){
+            mostrarError(destino, err);
+    }
+    });
+
+
 })
