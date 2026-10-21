@@ -93,13 +93,14 @@
     }
 
     //conversores
+    //FSLM
     $('form-binario').addEventListener('submit', (e)=>{
         e.preventDefault();
         const destino = $('bin-resultado');
         try{
             const entrada = $('bin-entrada').value.trim();
             const octetos = entrada.includes('.') ? S.enteroAIp(S.ipAEntero(entrada)).split('.').map(Number) : [Number(entrada)];
-            if(octetos.some((0) => !Number.isInteger(o)  || o < 0 || o > 255)){
+            if(octetos.some((o) => !Number.isInteger(o)  || o < 0 || o > 255)){
                 throw new Error('Escribe un numero entre el 0 y el 255 o una IP valida'); 
             }
             destino.innerHTML = octetos.map((o) =>{
@@ -126,5 +127,46 @@
     }
     });
 
+    //les dejo de tarea el vlsm, el truco es usar el mismo evento de funcion que el anterior pero agregar el calculo de host
 
-})
+    //a que red pertenece?
+    $('form-ip').addEventListener('submit', (e) =>{
+        e.preventDefault();
+        const destino = $('ip-resultado');
+        try{
+            const ip = $('ip-dir').value.trim();
+            const prefijo = S.leerPrefijo($('ip-prefijo').value);
+            const s = S.analizarIP(ip, prefijo);
+
+            destino.innerHTML = ` 
+                <div class="tarjeta" >
+                    <h3>${escapar(ip)}/${prefijo}</h3>
+                    <p class="binario" >IP&nsbp;&nsbp;&nsbp;&nsbp;&nsbp;${binarioColorado(ip, prefijo)}</p>
+                    <p class="binario" >Mascara${binarioColorado(s.mascara, prefijo)}</p>
+                    <p class="binario" >Red&nsbp;&nsbp;&nsbp;&nsbp;&nsbp;${binarioColorado(s.red, prefijo)}</p>
+                    <div class="datos">
+                        <div>
+                            <dt>Red</dt><dd>${s.red}/${prefijo}</dd>
+                        </div>
+                        <div>
+                            <dt>Primer host</dt><dd>${s.primerHost}</dd>
+                        </div>
+                        <div>
+                            <dt>Ultimo host</dt><dd>${s.ultimoHost}</dd>
+                        </div>
+                        <div>
+                            <dt>Broadcast</dt><dd>${s.broadcast}</dd>
+                        </div>
+                        <div>
+                            <dt>Host utiles</dt><dd>${formatoMiles(S.hosts)}</dd>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }catch(err){
+            mostrarError(destino, err);
+        }
+    });
+
+
+})();
